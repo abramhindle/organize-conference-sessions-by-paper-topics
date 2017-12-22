@@ -1,0 +1,620 @@
+Performance with an Electronically Excited Didgeridoo
+Abram Hindle
+
+Daryl Posnett
+
+Department of Computing Science
+University of Alberta, Canada
+hindle1@ualberta.ca
+
+Sacramento, California
+USA
+darylp@tcfacs.org
+
+ABSTRACT
+The didgeridoo is a wind instrument composed of a single
+large tube often used as drone instrument for backing up the
+mids and lows of an ensemble. A didgeridoo is played by
+buzzing the lips and blowing air into the didgeridoo. To play
+a didgeridoo continously one can employ circular breathing
+but the volume of air required poses a real challenge to
+novice players. In this paper we replace the expense of
+circular breathing and lip buzzing with electronic excitation,
+thus creating an electro-acoustic didgeridoo or electronic
+didgeridoo. Thus we describe the didgeridoo excitation
+signal, how to replicate it, and the hardware necessary
+to make an electro-acoustic didgeridoo driven by speakers
+and controllable from a computer. To properly drive
+the didgeridoo we rely upon 4th-order ported bandpass
+speaker boxes to help guide our excitation signals into
+an attached acoustic didgeridoo. The results somewhat
+replicate human didgeridoo playing, enabling a new kind
+of mid to low electro-acoustic accompaniment without the
+need for circular breathing.
+
+Author Keywords
+Augmented/hyper instruments, Robotic music, diggeriedoo,
+dijj, didjeridu
+
+ACM Classification
+H.5.5 [Signal analysis, synthesis, and processing] Sound and
+Music Computing
+
+1.
+
+INTRODUCTION
+
+The didgeridoo is an ancient instrument heralding from
+the indigenous Australians, Aboriginal Australians, and
+Torres Strait Islanders. Originally fashioned from termitehollowed out branches of trees [3], the didgeridoo is a
+long low frequency wind instrument that is driven by
+buzzing one’s lips. It can be played continuously by human
+players if circular breathing is employed. The didgeridoo
+typically produces long drones, but one can also speak
+into it and modulate the frequency of buzzing and breath
+to play various motifs similar to animal sounds found in
+Australia [4].
+Circular breathing [1] is the act of continuously pushing
+air out of the mouth by the use of lungs, diaphragm, and
+
+even cheek muscles. Circular breathers will lock their mouth
+cavity down, breath through their nose, and push air out of
+their mouths mechanically with their cheeks. This enables
+the circular breather to continuously refresh their air supply
+and not run out of air. The level of skill required to drive
+a didgeridoo is more than what is required to drive smaller
+wind instruments. Circular breathing is a difficult skill to
+learn for many novices, especially the authors of this paper.
+Thus the main motivation for this work comes from the
+fact that both of the authors are didgeridoo novices, and
+they find the large volume of air that a didgeridoo requires
+to be too much for their weak circular breathing skills.
+Out of desperation and need to play acoustic long drones,
+combined with a lack of enthusiasm for skillful training and
+practice, the authors attempted to automate some forms of
+didgeridoo playing.
+This work has 3 requirements: play a didgeridoo automatically without a human respiratory system; play a didgeridoo acoustically—do not synthesize the resonant chamber
+of the didgeridoo, rather drive it; and to drive a didgeridoo
+electronically such that it sounds like a real didgeridoo.
+The authors experimented haphazardly to drive a didgeridoo much like a bagpipe, by driving a tube with compressed
+air, air from balloons, and air from pumps. The authors
+found that the buzzing lips of the didgeridoo player were
+not appropriately modelled by these attempts and, consequently, did not sound like a didgeridoo. Thus the authors
+embarked down a path of electronically exciting didgeridoo
+with speakers that played a signal that closely replicated the
+buzzing of a didgeridoo player’s lips. Other works [8] have
+driven wind instruments with speakers, drivers, and tweeters and have had some success, so why not try didgeridoos?
+Driving a didgeridoo requires a different approach than
+driving a clarinet as the frequency of the excitation signal
+is much lower than that of clarinets and other smaller wind
+instruments. We employ speaker box design to address this
+need for low frequency response from excitation signals.
+In this paper, we provide the following contributions:
+• we present a method of electronically exciting a
+didgeridoo with speakers;
+• we describe the design of speaker boxes necessary to
+drive a didgeridoo;
+• we have performed, tested, refined, and analyzed this
+design;
+
+2.
+Licensed under a Creative Commons Attribution
+4.0 International License (CC BY 4.0). Copyright
+remains with the author(s).
+NIME’17, May 15-19, 2017, Aalborg University Copenhagen, Denmark.
+
+PRIOR WORK
+
+To drive a didgeridoo with a speaker we need to emulate the
+noise made by a human player. The didgeridoo excitation
+signal was described and modelled by Fletcher et al. [3].
+This model uses frequency, time, and lip opening as inputs
+and produces a sound wave that can excite a didgeridoo. We
+provide a detailed description of this model in Section 3.2.
+
+222
+
+The Monochord-Aerophone Robotic Instrument Ensemble [8] used high frequency driver-excited clarinets and wind
+intstruments during live performances. Their clarinet has
+solenoid driven “fingers” and can play many pitches, however, unfortunately the tone is robotic. The tweeter drivers
+used in the instrument make it inappropriate for driving a
+didgeridoo as they are too high pitched.
+Not all attempts at driving wind instruments used speakers. Some have tried to drive wind instruments with air
+pressure control systems that pump air out of robots. The
+biologically inspired performance robots described by Solis
+et al. [9] force air into wind instruments like flutes.
+Michon et al. [5] developed the hybrid clarinet. It has a
+human driven mouth piece with an electronically modelled
+clarinet. They attempted to address the physical need for
+a clarinet body by using physical modelling in software, yet
+still rely on the nuanced reed playing of a human performer.
+Their approach facilitates the generation of virtual clarinets
+that rely on the existing skills of a clarinet performer. Our
+work took the opposite approach, we rely on the software
+driving the excitation signal to be the skilled force that
+drives a real didgeridoo rather than a skilled performer
+playing a virtual didgeridoo.
+
+3.
+
+DESIGN
+
+To help drive the didgeridoo with low frequency tones we
+rely heavily on band-pass speaker boxes [2]. These are
+passive boxes whose architecture act as a bandpass filter
+on the speakers mounted within the box. We rely on the
+guidelines for ported bandpass speaker boxes from Vance
+Dickason [2].
+The overview of the design of the electronically driven
+didgeridoo is a ported bandpass speaker box coupled with
+a didgeridoo. The intent is to directly couple the speaker
+ouput to the didgeridoo with a tight seal forcing the acoustic
+energy through the didgeridoo.
+While almost any sub-woofer design would be able to
+produce the low frequencies required for this application,
+a 4th order bandpass design combines a sealed woofer
+chamber with a secondary ported chamber such that all
+acoustic energy is transmitted via the port. (See Figure 1)
+This design yields a physical advantage in that the driver
+is completely enclosed and the output from the enclosure
+emanates from a port that can be coupled directly to the
+instrument.
+Since the port must be coupled to the tube, the port
+dimension is an important design criterion that must be
+chosen in advance. The remainder of the design is then
+adjusted to facilitate the chosen port opening.
+• Acquire a speaker tuned for and capable of producing
+frequencies in the 60hz to 90hz range.
+• Given the port opening, calculate the volumes of the
+closed box, the ported box, using a 4th order bandpass
+calculator [7].
+• Build the bandpass box and mount the speaker inside.
+• Attach a didgeridoo to the port.
+• Configure software to play signals through an appropriate amplifier for the mounted speaker.
+
+3.1
+
+Bandpass boxes
+
+The range of the didgeridoo excitation signal, and the
+output of the didgeridoo are quite low, thus sub-woofers,
+woofers, and mid-speakers should be used. A professional
+player’s excitation signal contains strong components from
+about 50Hz up to around 4 kHz. This is a different
+
+Sealed
+
+Ported
+
+Sealed
+
+Ported
+
+Figure 1: 4th Order Bandpass Designs, sealed and isobaric
+speaker boxes.
+
+requirement from Rogers et al.’s [8] clarinet-like instrument
+which used high frequency drivers.
+Yet Dickason [2]
+describes many different kinds of speaker boxes that address
+low frequency response such as bandpass boxes.
+Normal use of bandpass speaker as a sub-woofer requires
+a crossover to filter out high frequencies. In our case we
+connect the amplifier directly to the bandpass speaker as we
+want to reproduce as much of the high frequency content as
+possible and we are not concerned with the efficiency issues
+of traditional subwoofer design.
+
+3.1.1
+
+Box 1
+
+The first box is constructed from raw materials and makes
+use of the leftmost design shown in Figure 1. Box 1 is
+built from MDF wood and ABS pipe, coupled with an
+inexpensive didgeridoo. It was used for performance and
+it used a 8 inch diameter mid-range car speaker that had a
+free air resonance of 88hz (Pyramid WH8 8-Inch 200 Watt
+High Power Paper Cone 8 Ohm Subwoofer). The sealed
+box had an interior volume of 13.3 L with dimensions of
+25.4cm by 25.4cm by 20.6cm, (10 x 10 x 8.1 inches), and a
+ported box with interior volume of 2.5 L with dimensions of
+25.4cm by 25.4cm by 3.81cm. (10 x 10 x 1.5 inches). The
+port was 5cm (2 inches) in internal diameter and 26.78cm
+(10.5 inches) long, cut from 5cm (2 inch) diameter ABS
+pipe. The port is longer than all dimensions of the box,
+thus it was placed externally to the ported box, like a stovepipe. Theoretically the box output frequencies were tuned
+between 51hz and 153hz centered around 88hz.
+To cut out this box with 1.9cm (3/4 inch) thick MDF we
+recommend cutting out 2 30.48cm (12 inch) by 25.4cm (10
+inch) inner side pieces, and 2 30.48cm (12 inch) by 30.48cm
+(12 inch) side pieces, 2 30.48cm (12 inch) by 30.48cm (12
+inch) end pieces, and 1 25.4cm (10 inch) inner speaker
+mount piece. A hole of appropriate size must be cut out
+of the inner speaker mount piece to mount the speaker.
+The box volumes were calculated using a calculator made
+by Raymond et al. [7].
+This box was driven by a 1970s solid state Kenwood KA4002 stereo amplifier with 18W per channel, as it was freely
+available. The box and the attached didgeridoo are depicted
+in Figure 4 in Section 4.
+
+3.1.2
+
+Box 2
+
+Box 2 is an isobaric speaker box made from two modified
+commercial speaker enclosures, in our case, the Alesis
+Monitor 1. Many commercial speakers can be adapted to
+this design which is a simple method for quickly building a
+ported bandpass enclosure.
+
+223
+
+Box2 Frequency Response
+0
+
+-20
+
+Magnitude (dB)
+
+-40
+
+-60
+
+-80
+
+-100
+
+-120
+1
+10
+
+10
+
+2
+
+10
+
+3
+
+10
+
+4
+
+Frequency (Hz)
+
+Figure 2: Box 2 Response
+
+The Monitor 1 has a frequency response down to 45 Hz
+and uses a 16.5cm woofer which has several properties that
+facilitate our design. The woofers are perfectly centered in
+the box in its shortest dimension and have a rubber mounting ring that protrudes slightly from the face. Consequently,
+when the two speakers are placed face to face, the woofers
+are perfectly aligned and the space between them is sealed
+in an airtight gap. In order to realize an adequate seal,
+one of the two tweeters must be removed. The resulting
+opening, however, is sufficiently sealed by the face of the
+opposing tweeter which is left in place to provide a barrier
+between the two cabinets. We disconnected the wiring of
+both tweeters as they are not used in this design.
+Each speaker has a rear facing port hole that is slightly
+larger than 3.81cm (1.5 inch) PVC pipe. One of these two
+ports is sealed shut and the other is coupled to the PVC
+pipe via an adapter. The two speakers are then placed
+face to face and coupled tightly together using clamps. The
+didgeridoo, a PVC pipe of similar bore, is coupled to the
+port PVC pipe.
+This construction yields an isobaric 4th order bandpass
+enclosure. An isobaric enclosure uses two drivers working
+in concert as a single driver as shown in the rightmost
+diagram of Figure 1. When one driver moves outward,
+the other moves inward. To achieve proper operation the
+two speakers are wired in opposite polarity and without
+crossover networks. An isobaric configuration behaves as a
+single driver with a motor that is twice as powerful. This
+configuration, however, requires twice the power to produce
+the same output [2]. Each speaker is capable of handling
+120 Watts at 8 ohms. We power this with a bridged Mackie
+1400i capable of producing 1400 Watts at 4 Ohms.
+In order to achieve satisfactory response an equalization
+curve was applied manually to Box 2. A high shelf boost of
+12dB at 2kHz increased the high frequency response and a
+sharp notch filter at 1.5kHz was required to null a resonant
+peak. Figure 2 shows the corrected response of Box 2 when
+driven with a white noise signal. While it is hardly flat
+across the spectrum, it gives usable response between 40Hz
+and 4kHz.
+
+3.2
+
+Software driven excitation
+
+(p20 )/(R3 )
+(a0 + asin(2πf t))2
+
+where f is frequency of lips, a is size of lip opening where
+0 ≤ a < a0 , and t is time. Pressure is p0 , and R is the
+acoustic resistance of the instrument tube at the resonant
+frequency. We keep p0 , R, and a0 constant while we can
+vary f and a over t. The output across t is a waveform
+of a didgeridoo excitation signal. Note that this does not
+replicate vocalization. Vocalization can be added to the
+dijj(f, a, t) signal.
+
+3.3
+
+(1)
+
+Software interface
+
+During the public performance of the didgeridoo we used
+a webservice UI that mapped a 2D Hilbert curve to a 2D
+scratch-pad. When the scratch-pad was touched or clicked
+a didgeridoo tone was initiated, when it was released the
+didgeridoo tone was released. The didgeridoo used an
+ADSR envelope for triggering with a long release so that
+any drone could be sustained or its parameters changed via
+mouse or touchscreen control.
+Points on the 2D Hilbert curve were mapped to back
+to a 1D scalar value and which was then mapped to a
+N dimensional Hilbert curve across the parameters of the
+synthesizer. This effectively maps 2D inputs to N-D inputs.
+In our case we used dimensions such as lip opening (a), lip
+frequency (f ), amplitude, frequency modulation, and the
+constant value for p0 . This meant that areas on the scratchpad existed that sounded like other areas, but short local
+movements would not change the synthesizer parameters
+drastically. This enabled a performer to modulate the
+didgeridoo synth parameters simply by dragging the cursor.
+This helped create more complicated and natural didgeridoo
+expressions, as without variation the didgeridoo excitation
+is very mechanical, exact, and robotic. This scratch-pad is
+inspired by the Sonic Zoom interface proposed by Tubb et
+al. [10].
+
+4.
+
+We implemented the excitation signal generator in Pure
+Data (Figure 3) and Reaktor (Figure 5) using a function
+from Fletcher et al. [3] given by:
+dijj(f, a, t) = p0 /R −
+
+Figure 3: Pure Data didgeridoo exciter
+
+LIVE PERFORMANCE
+
+The didgeridoo driven by Box 1 was used in a live performance in January 2017 at Art’s Birthday (celebrating the
+birth of the concept of art) in Edmonton, Canada. The
+didgeridoo was driven by live improvisation to accompany
+a pre-recorded piece of music by Philippe Neau. It was well
+received although the didgeridoo had to be micro-phoned
+
+224
+
+However, we also find that the output level varies considerably over the range of useful values of a. Consequently,
+we make some attempt to normalize the exciter function by
+setting α = (1 − a)2 . This scaling factor yields roughly constant amplitude for a large range of the a parameter. As the
+additional harmonics are introduced the overall amplitude
+is reduced to compensate for the increased spectral content.
+
+5.2
+
+Figure 4: Art’s Birthday Performance using Box 1 with a
+wooden didgeridoo
+
+to amplify its signal in the large room. Figure 4 shows the
+performer sitting down controlling the didgeridoo attached
+to Box 1 sitting beside him. The performer utilized a 2D
+scratch-pad, described in Section 3.3.
+One audience member, a didgeridoo player, suggested
+employing more vocalizations and attaching a microphone
+to the device. Possible improvements in performance could
+be attained by using a more powerful amplifier to drive the
+speaker, as well as employing lip opening envelopes rather
+than straight ADSR envelopes. One concern was with how
+simple or robotic the didgeridoo sounded. We concluded
+that adding low amplitude noise to many of the parameters
+such as frequency f and lip opening a would improve the
+naturalness of the didgeridoo sound.
+
+5.
+
+IMPROVED EXCITER
+
+In an effort to combat robotic performances we acted upon
+feedback from the performance to modify Fletcher’s [3]
+exciter to produce signals closer to real didgeridoo players.
+Fletcher et al. describe their model as a simplified model
+of a lip valve [3]. We compare its spectrum with the
+specturm of our normalized version of the simplified model.
+When the parameter a is close to zero, the output of the
+exciter has few harmonics. As the parameter approaches 1
+the harmonic content increases dramatically. Although the
+intensity of the harmonics increases with parameter a, this
+model replicates very little of the higher formants typical of
+human didgeridoo players.
+We also observe that the basic exciter implementation has
+far less variation than the exciter of the human didgeridoo
+player. Moreover, the high frequencies roll off sharply after
+1kHz.
+
+5.1
+
+dijj(f, a, t) =
+
+α
+(1 + asin(2πf t))2
+
+5.3
+
+(2)
+
+Vowel like sounds
+
+In addition to variation in the lip movement, the tongue and
+throat contribute significantly to the sound of the didgeridoo. While modelling the tongue and throat accurately is
+beyond the scope of this work, we added a third LFO to
+add some harmonic colour.
+This LFO primarily modulates the frequency of the exciter and thus,in addition to providing additional harmonic
+content, it also replaces the function of the LFO in the Pure
+Data implementation.
+Rather than a straightforward sine wave oscillator, we
+use a formant oscillator which allows the formant frequency
+of the oscillator to be adjusted independently of the base
+frequency. This LFO also modulates the a parameter thus
+simulating that a change in frequency will also cause the lip
+opening to change. The base frequency is fixed as a multiple
+of the fundamental frequency. The formant frequencies are
+user controllable and add a simulation of vowel-like sounds
+to the basic sound of the exciter.
+
+5.4
+
+Spit sounds
+
+A small amount of coloured noise is added to the output
+to simulate the wind and spit sounds that a real didgeridoo
+player will produce. The noise amplitude is modulated by
+the output of the exciter to simulate the motorboat like
+properties of a didgeridoo player’s lips. The user is able to
+control the noise colour and the level of noise added to the
+output.
+
+6.
+
+Improved exciter design
+
+To improve the realism of the simulated didgeridoo we
+extended the original exciter model. This second exciter was
+implemented in Reaktor [6], as seen in Figure 5. Our first
+improvement was to simplify the exciter for fixed pressure
+and tube impedance and to normalize the output somewhat.
+Since we are holding p0 , R, and a0 constant we make
+some simplifications. We observe that this function will
+have a DC offset that must be removed with a high-pass
+filter, consequently, the value of these constants when fixed
+is arbitrary and, setting α = −1, we can simplify the exciter
+as follows.
+
+Robotic sound
+
+In the Pure Data implementation we modulated the exciter
+function with a sine wave low frequency oscillator (LFO), in
+order to modulate the drone frequency. While this allowed
+some variation in frequency and tone it was insufficient to
+avoid a robotic sound.
+We observe that real players do not maintain a constant
+frequency or amplitude but have small perturbations in
+these parameters while playing. In our improved exciter we
+use two random waveform LFOs to simulate the variation
+expected in a human player’s lip opening while playing. The
+two LFOs operate at frequencies 0.1 · f and 0.01 · f labelled
+fast and slow respectively. Each has player controlled
+amplitudes. These LFOs output a random waveform that
+simulates Brownian motion.
+
+FUTURE WORK
+
+While our improved exciter addressed many of the issues of
+a robotic sounding performance, more can be done. Adding
+noise worked well for the improved exciter, thus perhaps
+adding reverb could help simulate a didgeridoo born of a
+termite infested branch. This reverb could simulate a less
+than smooth bore.
+Another area of improvement is to address the model of
+the human player. We did not have good measures of lip
+opening, pressure, or frequency of excitation, furthermore
+much of our aim was emulate didgeridoo playing and thus
+all of the sounds one can make with a didgeridoo. Future
+work can involve searching a space of parameters that
+change across time in order to find the parameter timeseries
+that could produce other characteristic didgeridoo sounds
+
+225
+
+Figure 5: Reaktor didgeridoo exciter. Inputs are on left, output is on the right. Frequencies are specified directly in Hz. All
+other inputs are normalized to a 0..1 range.
+
+such as dingo barks [4]. Rather than manually reverse
+engineer how a didgeridoo sound is made we could use
+search algorithms to tune the parameters of our exciter
+to find series of parameters that would produce didgeridoo
+sounds.
+Alternatively we can use a microphone to simulate driving
+a didgeridoo with our own mouth whether by enveloping the
+excitation signal or by layering microphone vocals into the
+excitation signal to simulate vocalizing with a didgeridoo.
+Fletcher [3] has shown that many vocalizations are not from
+the lips but from the vocal chords and are overlaid on the
+lip buzzing signal.
+
+7.
+
+CONCLUSIONS
+
+We have described a method of utilizing ported bandpass
+speaker boxes to electronically drive didgeridoos, effectively making an electro-acoustic didgeridoo. This kind of
+didgeridoo faces serious energy/amplification constraints
+that other electronically excited wind instruments do not
+as lower frequency response requires larger speakers driven
+by powerful amplifiers—similar to speakers and amplifiers
+used in hobbyist car stereos. Using the work of Fletcher et
+al. [3], the speakers produce a didgeridoo excitation signal
+meant to mimic the buzzing of a performer’s lips. This
+signal drives a didgeridoo and produces sounds similar to a
+didgeridoo performer’s music.
+We found that if frequency, and lip opening are not
+carefully modulated, whether manually or by Brownian
+motion, the didgeridoo will sound robotic. Adding further
+modulation and noise can produce more natural didgeridoo
+sounds, yet it is clear there is a lot of future work to be
+done in intentionally emulating many forms of didgeridoo
+expressions as well as finding appropriate user interfaces to
+control the didgeridoo. 1
+
+8.
+
+REFERENCES
+
+[1] Circular breathing. Circular breathing — Wikipedia,
+the free encyclopedia. https:
+//en.wikipedia.org/wiki/Circular_breathing,
+2017. [Online; accessed 2017-01-15].
+[2] V. Dickason. Loudspeaker design cookbook. 2005.
+[3] N. Fletcher. The didjeridu (didgeridoo). Acoustics
+Australia, 24:11–16, 1996.
+[4] D. Hudson. Playing a didgeridoo. Video
+https://www.youtube.com/watch?v=0XlEkeot7HM,
+2010.
+[5] R. Michon and J. Granzow. Research report: Hybrid
+clarinet project. https://ccrma.stanford.edu/
+~rmichon/hybridSax/img/hybrid.pdf, 2013.
+[6] Native Instruments. Reaktor. Software
+http://www.native-instruments.com/index.php,
+2008. [Online; accessed 2017-01-30].
+[7] J. Raymond. Subwoofer box enclosure design
+calculator - sealed ported bandpass closed vented.
+Software http://www.ajdesigner.com/fl_
+subwoofer/subwoofer.php, 2015. [Online; accessed
+2017-01-30].
+[8] T. Rogers, S. Kemper, and S. Barton. Marie:
+Monochord-aerophone robotic instrument ensemble.
+In Proceedings of the international conference on New
+Interfaces for Musical Expression, pages 408–411. The
+School of Music and the Center for Computation and
+Technology (CCT), Louisiana State University, 2015.
+[9] J. Solis, K. Ozawa, M. Takeuchi, T. Kusano,
+S. Ishikawa, K. Petersen, and A. Takanishi.
+Biologically-inspired control architecture for musical
+performance robots. International Journal of
+Advanced Robotic Systems, 11(10):172, 2014.
+[10] R. Tubb and S. Dixon. The divergent interface:
+Supporting creative exploration of parameter spaces.
+In NIME, pages 227–232, 2014.
+
+1
+didgeridoo patches can be found here https://github.
+com/abramhindle/diggeridoo
+
+226
+
+

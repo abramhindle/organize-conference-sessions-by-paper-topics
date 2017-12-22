@@ -1,0 +1,777 @@
+What’s hot and what’s not:
+Windowed developer topic analysis
+Abram Hindle and Michael W. Godfrey and Richard C. Holt
+University of Waterloo
+Waterloo, Ontario
+Canada
+{ahindle,migod,holt}@uwaterloo.ca
+
+Abstract
+As development on a software project progresses, developers shift their focus between different topics and tasks
+many times. Managers and newcomer developers often
+seek ways of understanding what tasks have recently been
+worked on and how much effort has gone into each; for
+example, a manager might wonder what unexpected tasks
+occupied their team’s attention during a period when they
+were supposed to have been implementing a set of new features. Tools such as Latent Dirichlet Allocation (LDA) and
+Latent Semantic Indexing (LSI) can be used to analyze commit log comments over the entire lifetime of a project.
+Previous work on developer topic analysis has leveraged
+these tools to associate commit log comments with independent topics extracted from these commit log comments. In
+this paper, we use LDA to analyze periods, such as months,
+within a project’s lifetime to create a time-windowed model
+of changing development topics. We propose visualizations
+of this model that allows us to explore the evolving stream
+of topics of development occurring over time. We demonstrate that windowed topic analysis offers advantages over
+topic analysis applied to a project’s lifetime because many
+topics are quite local.
+
+1. Introduction
+The questions that we wish to address deal with the past
+and topics development that occurred in the past. What happened in the previous iteration of a project’s development?
+What were the developers working on? What was the developer in the next cubicle working on? Which common
+topics and issues were dealt with in the current release of
+the software? What were the topics of the previous release?
+Given the requirements agreed to at the start of the iteration
+did our developers work on them? What else did they work
+
+on?
+We want to know about the topics of that programmers
+encountered while developing a software project. We want
+to know given a certain period of time, what were the popular topics being worked on during that period. We also
+want to know if any of those topics occurred again, whether
+before or after our current period. These topics could help
+stakeholders determine what their coworkers were working
+on, what were common issues, what requirements were being worked on, etc. In order to extract and evaluate these
+topics we plan to rely on topic analysis.
+Topic analysis extracts independant word distributions
+(topics) from documents (commit log comments). Ideally
+these extracted topics correlate with actual development
+topics that the developers discussed during the development
+of the software project. Topic analysis often allows for a
+single document, such as a commit message, to be related
+to multiple topics. Documents represented as a mixture of
+topics maps well to commits to source code, which often
+have more than one purpose. A topic represents both a word
+distribution and a group of commit log comments that are
+related to each other by their content. In this case a topic is a
+set of tokens extracted from commit messages found within
+a projects source control system (SCS).
+In the past, topic analysis has been applied to the entire
+history of a project [9, 14, 12], where-as this paper suggests that most topics are local. For example, programmer
+may be working on a story card, they might never deal
+with that story card ever again. Thus that topic might be
+quite relevant to a small window of time but never relevant
+ever again. By applying topic analysis locally to a window
+or an iteration, both the developers and managers might be
+able to see what were the topics of development during that
+iteration, rather than the whole project.
+We want to see topics that are unique to a certain time
+period, displayed across the time axis. Figure 1 illustrates
+the kind of visualization we want to automatically generate.
+
+Those topics that recur, or occur over a larger period are
+plotted continuously. In our example we have titled each
+topic with a word drawn from its word distribution. Given
+a visualization, such as Figure 1, topic analysis can aid in
+partitioning a project’s time-line into periods of developer
+focus. By breaking apart an iteration into sets of topics and
+trends (topics that recur), we may be able to recognize the
+underlying software development process and maintenance
+tasks from these commits.
+In this paper we explore how topics shift over time in the
+source control system (SCS) of a project, using several open
+source database systems as examples. We analyze commit
+log comments in each time window and we extract the topics of that time window. We expect that topics will change
+over time and the similarities and differences in these topics will indicate developer focus and changes in developer
+focus as it changes over time. We will show that most topics are locally relevant, i.e., relevant to a single window of
+time. Our windowing approach supports both local (single
+window) analysis and global (entire history) analysis.
+Our contributions include:
+• We demonstrate that windowed topic analysis most
+topics are local in scope, which would be missed by
+a global topic analysis.
+• We present a number of visualizations of topics and
+their trends over time to aid communication and analysis of these topics and trends.
+• We provide an exploratory case study using these techniques on several open source database systems.
+
+2. Background
+We now define some terms that we will use in the rest
+of the paper: A message is a block of text written by developers. In this paper, messages will be the CVS and BitKeeper commit log comments made when the user commits
+changes to files in a repository. A word distribution is the
+summary of a message by word count. Each word distribution will be over the words in all messages. However, most
+words will not appear in each message. A word distribution
+is effectively a word count divided by the message size. A
+topic is a word distribution, i.e. a set of words that form a
+word distribution that is unique and independent within the
+set of documents in our total corpus. One could think of
+a topic as a distribution of the centroid of a group of messages. In this paper we often summarize topics by the top
+10 most frequent words of their word distribution. A trend
+is one or more similar topics that recur over time. Trends
+are particularly important, as they indicate long-lived and
+recurring topics that may provide key insights into the development of the project.
+
+In terms of clustering and finding topic distributions,
+Latent Dirichlet Allocation (LDA) [2] competes with Latent Semantic Indexing (LSI) [11, 12], probabilistic Latent Semantic Indexing (pLSI) [2] and semantic clustering [7, 8]. These tools are used for document modelling,
+document clustering and collaborative filtering. LDA attempts to encode documents as a mixture model, a combination of topics. LDA is used in software engineering literature [14, 10]LDA extracts topics from documents such as
+methods, bug reports, source code and files.
+LDA, LSI and semantic clustering extract topic clusters
+from the documents that are independent from one another.
+LDA does not name these clusters but the clusters consist
+of words whose relationship is often obvious to someone
+familiar with the corpus. For our purposes, we could swap
+LDA for LSI or semantic clustering and likely produce similar results. Our data is posed as documents with word distributions (word counts per documents) and LDA extracts
+distinct topics (clusters of words) from the documents.
+
+2.1. LDA, LSI and Semantic Clustering
+In order to infer or associate the expertise of an author with topics extracted from SCS, Linstead et al. proposed an author-source-code model using LDA [10].This
+model is essentially an extension of the author-topic (AT)
+model [13], which associated authors and topics extracted
+with LDA.
+Lukins, Kraft and Etzkorn [14] use LDA to help bug localization by querying for documents that are related to a
+bug’s topic. They used LDA to build a topic model and then
+queried against it using sample documents. These queries
+would indicate the proportion of topics that were associated
+with the query and the related documents.
+LSI is related to LDA and has been used to identify topics in software artifacts for formal concept analysis and concept location [11, 12]. Concept analysis aims to automatically extract concepts from source code or documents that
+are related to the source code. Concept location concerns
+how high-level concepts relate to low level entities such as
+source code. For example, when fixing a bug, how and
+where do the concepts in the bug report map back to the
+source code? Semantic Clustering has also been used for
+similar purposes [7, 8] as it is similar to LSI.
+Grant et al. [5] and have used an alternative technique,
+called Independent Component Analysis [3] to separate
+topic signals from software code.
+Our technique differs from the previous techniques because we apply LDA locally to month-long windows of
+commit log comments, whereas other approaches apply
+LDA once to the entire project. Windowed topic analysis
+allows us to examine the time-based windowing of topics
+over its development history.
+
+Imagine that we are analyzing one month of development in a project where the main focus was on bug fixing,
+adding a new GUI and documentation updates relating to
+the system and the GUI. To use LDA we would get the word
+distributions of each commit messages, pass them to LDA
+and tell LDA to find some topics, in this case we in this case
+we chose to concentrate on four topics. The four topics
+it discovered would ideally be bug fixing, GUI, documentation and other. These topics are essentially word distributions, for example the bug fixing topic would include words
+like bug, fix, failure and ticket. The GUI topic would include
+words like widget, panel, window, and menu. The documentation topic would include words like section, figure,
+and chapter. The other topic would include words found
+in topics generally independant of the other topics. If we
+analyzed a commit of a bug fix it would probably contain
+words like ticket and thus heavily associate with the bug fix
+topic. A commit that was about user documentation regarding the GUI would be associated with the documentation
+topic and the GUI topic because it shared words from both
+topics. Where as a topic dealing neither bugs, GUIs or documentation might be associated with the other topic. This
+example demonstrates how LDA can associate one document (a commit message) with more than one topic, and
+how topics are related to documents via their word distributions. LDA also would discover these independant topics in
+an unsupervised manner. All the end user has to do is name
+the topic based upon the most frequent words in that topic,
+which is a word distribution.
+
+3. Preliminary Case Study
+In our first exploratory pass we wanted to see if LDA
+could provide interesting topics extracted from a real system. We took the repository of MySQL 3.23, extracted the
+commits, grouped them by 30 day non-overlapping windows, and then applied LDA to each of these windows. We
+asked LDA to make 20 topics per window and we then examined the top 10 most frequent words in that topic. We
+chose one month because it was smaller than the time between minor releases but large enough for there to be many
+commits to analyze. We chose 20 topics because past experimentation showed that fewer topics might aggregate multiple unique topics while any more topics seemed to dilute
+the results and create indistinct topics. We chose the top ten
+most frequent words because sometimes a couple of common words dominated topics so we wanted to have enough
+words to distinguish topics.
+We found there were common words across topic clusters, such as diffs, annotate and history; since these words
+occur so often in the MySQL 3.23 messages. These words
+probably should be viewed as stop words since occur across
+so many topics, even though they are related to version con-
+
+2000
+2000
+2000
+2001
+2001
+2001
+2001
+2001
+
+Jul
+Sep
+Nov
+Jan
+Mar
+Jul
+Aug
+Sep
+
+chmod
+fixes benchmark logging Win32
+fixes insert multi value
+fixes Innobase Cleanups auto-union
+bugfix logging TEMPORARY
+TABLES update Allow LOCK
+TABLES row version
+update checksum merge
+
+Table 1. Sampled topics from MySQL 3.23,
+some with continuous topics. These tokens
+were pulled from the top 10 most common
+words found in LDA extracted topics. Each
+token is a summary of one LDA generated
+topic from MySQL 3.23 commit comments.
+
+trol usage. There were notable transitional topics such as
+in the first window the word BitKeeper appears because
+MySQL adopted Bitkeeper for their source control system
+yet in the following windows there were no mentions of
+BitKeeper. RENAME also only appeared once in the first
+window and never again. For each topic we tried to name
+the purpose of the topic; to our surprise we found that even
+with only a little familiarity with the code base that naming the topic was straightforward. To find the purpose of a
+commit we looked at the most frequent words in the word
+distribution of the topic and tried to summarize the topic,
+then we looked into the commits related to that topic to investigate if we were correct; since the commit messages and
+the word distribution share the same words the purpose extracted from commit comments was usually accurate.
+A sampling of the notable topic words is displayed in
+Table 1, we chose topics that we felt confident we could
+name. To name each topic we selected a term that seemed
+to best summarize that topic. After extracting these topics,
+we attempted to track the evolution of topics by visualizing
+the topics and joining similar topics into trends. Figure 1
+displays a manually created plot of the extracted topics in
+Table 1.
+
+4. Methodology
+Our methodology is to first extract the commit log comments from a project’s SCS repository. We filter out stop
+words and produce word distributions from these messages.
+These distributions are bucketed into windows, and then
+each window is subject to topic analysis and then we analyze and visualize the results. Figure 2 depicts the general
+process for processing and analyzing the commit messages.
+
+4.1. Extraction of Repositories and Documents
+
+2000
+Jul
+
+2000
+Sep
+
+chmod
+
+Fix
+
+2000
+Nov
+
+2001
+Jan
+
+2001
+Mar
+
+2001
+Jul
+
+2001
+Aug
+
+Tables
+
+2001
+Sep
+
+update
+
+Win32
+
+insert_multi_value
+
+auto-union
+
+TEMPORARY
+
+update
+
+version
+
+Checksum
+
+logging
+
+Typo
+
+Cleanup
+
+logging
+
+allow
+
+row
+
+Merge
+
+benchmark
+
+innobase
+
+LOCK
+
+Figure 1. Example of topics extracted from MySQL 3.23. This is the kind of plot we eventually want
+to illustrate: named topics and topic trends. The horizontal axis is time by month examined. The
+vertical axis is used to stack topics that occur at the same time. Longer topics are topics which
+recur in adjacent windows. Colors are arbitrary.
+
+We mirrored the repositories and their revisions
+using software such as rsync [15], CVSsuck [1],
+softChange [4], and bt2csv [6]. softChange provided a general schema for storing revisions and grouped
+CVS revisions into commits. CVSsuck and rsync mirrored
+CVS repositories while bt2csv mirrored web accessible BitKeeper repositories.
+The documents we are analyzing are the commit log
+comments, i.e. the comments that are added when revisions
+to the project are committed. For each commit log comment, we count the occurrence of each word in the message,
+remove stop words, and then produce word distributions for
+each message. These distributions are then normalized by
+the size of the message, each count was divided by the total
+number of tokens. After all messages are processed the distributions are extended to include all words from all of the
+distributions.
+
+4.2. Windowed Sets
+Given all messages, we group the messages into windows. We could use overlapping windows, but in this paper we use non-overlapping windows of a set time unit because it simplifies analysis. One could overlap the windows,
+which would increase the likelihood of trends, but for this
+study we lacked the space and were more concerned if topics ever repeated, overlapping might skew that result. Windowing by time allows for many levels of granularity. We
+used one month as the length of our time windows. While
+we could use different window lengths for this study we
+think that a month is a sizable unit of development, which
+is large enough to show shifts in focus, but coarse enough
+not to show too much detail. Choosing a month as the window provided us with enough documents to analyze.
+
+4.3. Apply Topic Analysis to each Window
+Once we have our data windowed, we apply our Topic
+Analysis tool to each window and extract the top N topics.
+We used 20 topics in our case studies because we experimented before and that 20 was about all we can handle before too many topics seemed too indistinct from each other
+to differeniate.
+Our Topic Analysis tool is an implementation of LDA,
+but we could have used other similar tools like LSI, but
+previous work showed more promising topic analysis results with LDA. We note that this step is a slow one, as executing even one instance of LDA involves significant computation, and we perform LDA once per window. Figure 2
+shows how LDA is applied to a set of messages, and how
+the topics are extracted and related to the messages.
+
+4.4. Topic Similarity
+Once we have our topics extracted for each window, we
+analyze them and look for topics that recur across windows.
+We then cluster these topics into trends by comparing them
+to each other using topic similarity.
+Our input for topic similarity is the top 10 most common words of each topic. Each topic is compared to each
+other topic in the system, given a certain threshold of top 10
+word similarity, such as 8 out of top 10 matching words. 10
+words were chosen because often people care about top 10
+comparison and it allowed for some common words to exist but not cause topics to match so closely. We then apply
+the transitive closure on similar topics to this topic similarity matrix; this is similar to modelling topics as nodes and
+similarity as arcs, then fill flooding along the similarity arcs
+until we have partitioned the topics into clusters of similar
+
+Figure 2. How commits are analyzed and aggregated into Topics and Trends. Commits are first
+extracted, then abstracted into word counts or word distributions. These word distributions are then
+given a topic analysis tool like LDA. LDA finds independent word distributions (topics) that these
+documents are related to.
+
+topics. Figure 3 illustrates clustering of topics by topic similarity. These clusters of topics are called trends. A trend is
+probably interesting if it contains more than one topic.
+This technique has weaknesses in that nodes that are a
+few neighbors away in similarity might not share any similar words. We use this measure because we want to be able
+to color or highlight topics that are related to each other and
+track them throughout time.
+Once we have determined our similarity clusters we can
+choose to analyze and to plot the topics.
+
+4.5. Visualization
+Visualization is an integral part of our topics analysis
+which allows us to quickly explore the topics and trends
+of a project. Visualization provides us with a framework
+that allows us to visually answer many questions about: the
+spread of topics, how many topics were independant per period, what the repeating trends were, if the trends dominated
+or did local topics dominate, how continuous trends were,
+and what the topic text in topic, trend, or period was. Since
+we have multiple questions to answer we have multiple visualization, described within this section, that help answer
+different questions.
+We have devised several techniques for visualizing these
+topics and trends. For all of these techniques if we find
+trends that have continuous segments, then we plot those
+segments as joined horizontally across time. One technique
+is the compact-trend-view, shown in Figure 4 and Figure 5,
+that displays trends as they occur on the time-based x-axis
+
+Figure 3. Topic similarity demonstrated by
+clustering topics by the transitive closure
+(connectedness) of topic similarity. Nodes
+are topics and arcs imply similarity. Similarity could be a measure such as topics share
+8 out of 10 top ten words.
+
+(placement along the y-axis is arbitrary). Another technique
+is the trend-time-line, shown in Figure 6, each trend gets it
+own distinct y-value, while the x-axis is time; these topics
+are then each plotted on their own line across time as they
+occur. Our final technique is the trend-histogram, shown
+in Figure 7 where we plot each trend on its own line but
+stack up the segments of the trend, much like a histogram.
+Each topic has its top 10 words listed in descending order of
+
+Figure 4. Compact-trend-view shows topics per month for MaxDB 7.500. The x-axis is time in months,
+the Y axis is used to stack topics occurring at the same time. Trends that are continuous are plotted
+as continuous blocks. The top 10 words in the topics are joined and embedded in box representing
+the topics. No stop words were removed. The gap in the middle is a period where no development
+took place.
+
+frequency from top to bottom, this text is embedded inside
+the topic’s box. A trend has all of its topic text embedded
+side by side within the same trend box.
+The compact-trend-view (Figure 4) attempts to show all
+topics and trends at once across time in a compact view that
+could fit on one page. It tries to give a compact summary
+of the topics and trends across time. The compact-trendview (Figure 4) tries to sink the larger trends to the bottom. Once the larger trends are stacked we fill in the gaps
+with the smaller trends in the same window, and then stack
+the smaller trends on top. Although there is a chance that
+gaps will be left due to non-optimal stacking, in practice
+there are lot of small trends (90% of all trends contain 1
+topic) that fill in these gaps quickly. Different instances of
+the same trend share the same color; apart from that, the
+color of trends is randomly chosen and color similarity is
+not meaningful. The compact-trend-view is convenient because it shows all of the topic information, as shown by the
+zoomed-in view of MaxDB 7.500’s compact-trend-view in
+Figure 5. The compact-trend-view makes repeating continuous trends easy to pick out, although discontinuous trends
+are harder to spot, and provides a general summary of the
+topics within a project.
+The trend-time-line (Figure 6) attempts to show a summary of trends seperated from single topics. This view
+shows how a trend persists across time, which aids timewise analysis of trends. The trend-time-line displays repeating trends more clearly by dedicating a horizontal line
+for trend segments belonging to one trend. Therefore if a
+trend contains discontinuous segments then the segments
+appear on the same line. However, the least common trends
+need to be pruned away or the view will be very long. Thus
+the trend-time-line view is used to analyze trends across
+time.
+The trend-histogram (Figure 7) attempts to show a count
+of how often a trend reoccurs and how many topics are related to a trend. It is meant to show the distribution of trends
+by their size in topics and time-span. The trend-histogram
+superficially resembles the trend-time-line. However, in this
+view the trends are plotted together by stacking to the left
+of their row, thus time information is lost. The trends are
+ordered by the number of topics in the trend. The trendhistogram shows the count of instances of a trend and thus
+indicates which trends occur the most. Unfortunately due to
+the large number of topics (approximately N topics multiplied by M periods), given the allotted space, it is often best
+to crop off the trends with only one topic (1% to 10% of the
+total topics), otherwise the tail is long. The trend-histogram
+summarizes the distribution of trends ordered by size.
+All of these visualization combine to enable an analysis
+of trends and topics. Some views like the compact-trendview enable an analysis of local topics while the trendhistogram and trend-time-line focus more on trends. We
+
+Figure 5. A zoomed in slice of compact-trendview of topics per month of MaxDB 7.500.
+The topic text is visible in each topic box.
+Trends are plotted across time continuously.
+
+used these visualizations to analyze the database systems
+that we discuss in the following results section.
+
+5. Results
+We applied our methodology to multiple database systems that we extracted. To analyze these extracted repositories we used: Hiraldo-Grok, an OCaml-based variant of the
+Grok query language; Gnuplot, a graph plotting package;
+lda-c, a LDA package implemented by Blei et al. [2]; and
+our trend plotter, implemented in Haskell.
+We applied our tools and visualizations to the repositories of several open source database systems: PostgreSQL,
+MaxDB and Firebird. The total number of commits analyzed was over 66000.
+
+5.1. PostgreSQL
+When we examined PostgreSQL’s history from 1996 to
+2004, which include over 20000 commits. We did not find
+many trends with two or more topics, using a similarity of
+7/10. 7/10 was chosen because it preserved indepedant
+topics but seemed to be a borderline threshold value where
+more serious trends started to appear.
+Those trends that we did find were not very large, lasting
+only 3 months at most. The first and second largest trends
+were dedicated to the work of two external developers: Dal
+Zotto, Dan McGuirk. The fifth largest trend related to work
+by PostgreSQL developer D’Arcy. Other topics of the larger
+trends were changes to the TODO, and time string formating topics relating to timezones.
+If we kept the stop words we found that the large trend
+consisted mostly of stop words and non-stop words such as
+patch, fix, update. By decreasing the similarity constraint
+to 1/2 similarity the largest most common trend, which
+
+stretched across the entire development, contained these
+same words (patch, fix, update). The second largest trend
+mentions Dal Zotto, while the third largest trend mentions
+the [PATCHES] mailing-list and the names of some patch
+contributors. Other repeating topics refer to portability with
+Win32, Central Europe Time (CEST) from email headers,
+issues with ALTER TABLE and CVS branch merging (CVS
+does not record merges explicitly).
+
+5.2. Firebird
+
+Figure 6. Trend-time-line: Trends plotted per
+month of MaxDB 7.500. Time in months are
+plotted along the x-axis, each row on the yaxis is associated with a trend ranked by size
+in descending order
+
+We tracked Firebird from August 2000 to January 2006,
+we extracted comments from 38000 commits. We found
+that with a similarity of 7/10 Firebird had far more continuous and recurring trends than PostgreSQL. The first large
+trend was segmented across time but explicitly references
+one author carlosga05 and words like added, fixed and
+updated.
+The second largest trend was during the month of March
+2001. It was related to incremental building and the porting
+of developer Konstantin’s Solaris port of the Firebird build
+files. The third largest trend was about JDBC, which is how
+Firebird and Java communicate. Other trends included topics regarding AIX PPC compilation, updating the build process, internationalization and UTF8, Darwin build support
+and bug fixing.
+Topics that were not trends but appeared to be interesting were mostly external bug fixes submitted to the project.
+In these cases, the developers would express gratitude in
+their commit log comments, such as “Thanks, Bill Lam”.
+Other easily discernible topics included tokens and phrases
+such as: compiler workarounds, nightly updates, packets
+and MSVC++.
+
+5.3. MaxDB 7.500
+
+Figure 7. The top part of a trend-histogram of
+MaxDB 7.500, ordered by topic occurrence.
+X-axis determines the number of continuous
+months of a trend. Trends are ranked by the
+number of topics that a trend contains in descending order.
+
+The plots we produced of MaxDB 7.500 were unlike
+those of the other systems, as there was a period where
+no development occurred and thus there were no topics or
+trends whatsoever (see the gap in Figure 4). Using a topic
+similarity of 7/10 we evaluated MaxDB 7.500. MaxDB
+7.500’s first period was from June 2004 to January 2005,
+and its second period was from June 2005 to June 2006.
+There were a total of 8600 commits analyzed.
+The largest common trend has references to build system
+files like SYSDD.punix and MONITOR.punix. This
+trend is partially displayed at the top of the zoomed in
+compact-trend-view (Figure 5) and at the top of the trendhistogram (Figure 7). Other tokens mentioned are Sutcheck
+v1.09 (the prefix SUT stands for Storable Unit Type),
+Sutcheck is a tool that would also automate check-ins using a Perforce SCS tool, which was exporting check-ins to
+CVS.
+
+The second largest common trend seems to be a side effect of an automated check-in that is annotated as “implicit
+check-in” (see the bottom of Figure 5). These were checkins that were produced when importing changes from an
+external Perforce repository.
+The third most common trend, seen on Figure 6, seemed
+to include tokens related to operating system support, such
+as Linux and Windows, as well as architecture support,
+AMD64 and Opteron. The word problem was common
+among all of these trends. This trend seemed related to
+the smaller fourth largest trend that had tokens AMD64 and
+Windows. This example shows that topics can overlap but
+still not match via our similarity measure.
+Bug tracker URLs dominated unique topics during some
+months. For instance in the last month of MaxDB 7.500 development every topic contained 1 unique Bug tracker URL,
+this pattern did not occur in the previous month. We investigated the revisions and we found that developers were referencing the bug tracker more during the last month. If the
+topics of one month were about unique bug tickets being addressed, the global topic analysis would probably miss this,
+yet these bug tickets were the focus of development for that
+month but not necessarily globally relevant.
+The query optimizer was a topic that recurred during
+MaxDB’s development. In our plots, topics that mention
+optimizer occur four times, yet in the global-trend-view
+(Figure 8) it is not in any of the topics. A query optimizer is an important component of an DBMS, but as we
+have shown it does not appear as a topic on its own. We
+tried to remove words to see if we could get an optimizer
+topic. After removing stop words and then two of the most
+common words, the global analysis finally had a topic with
+optimizer in its topic ten words. Our analysis shows that
+optimizer was important but it had been obscured by the
+global topic analysis, which used the entire history of messages, but would have been noticed using the more local
+topic analysis such as our windowed topic analysis, which
+used a window of messages.
+We noticed that commits that mentioned PHP occurred
+two thirds less frequently than commits that mentioned Perl,
+but Perl-related topics appeared in the global static topics
+for MaxDB while PHP-related topics did not. Our local
+topic analysis mentioned PHP in 5 different topics, yet only
+mentioned Perl in four different topics and one global topic.
+Perhaps this is because there was a cluster of Perl mentions during one month while the PHP mentions were more
+spread out.
+Just about every topic included the words Perforce and
+Changelist, so we added them to the stop words list. As a
+result, longer trends were shortened and sometimes the total
+number of topics found per month were reduced. Evaluating different similarity thresholds showed that by removing
+common words one reduces the general similarity of topics.
+
+That said, the larger topics were still clearly apparent. Thus
+if more relevant stop words are added one should tune the
+topic similarity parameters to handle these changes.
+
+5.4. Compare with topics over the entire
+development
+Previous work on topic analysis that employed LSI and
+LDA typically extracted a specified number of topics from
+the entire development history of a project and then tracked
+their relationships to documents over time, we call this
+global topic analysis.
+We carried out global topic analysis on MaxDB 7.500
+and compared this against our windowed topic analysis. To
+produce Figure 8, we extracted 20 topics and plotted the
+number of messages per month that were related to that
+topic. One topic would often dominate the results, as shown
+in the third row of Figure 8, while the other topics did not
+appear as often.
+This approach seems reasonable if most of the extracted
+topics are of broad interest during most of the development
+process. However, it may be that some topics are of strong
+interest but only briefly; in such a case, a windowed topic
+analysis gives a much stronger indication of the fleeting importance of such topics, and can help to put such a topic into
+its proper context.
+If we approach the difference of global topic analysis
+and windowed topic analysis via common tokens we can
+see that common tokens tend to dominate both results. For
+MaxDB 7.500, our local topic approach netted us topics that
+contained these relatively important and common words,
+which did not occur in the topics produced by global topic
+analysis: UNICODE, DEC/OSF1, ODBC, crash, SQLCLI,
+SYSDD.cpnix, backup, select, make, memory, view, and finally debug. ODBC is an important topic token, because
+it often determines how databases communicate with software. None of these tokens were part of the global topic
+analysis topics, but they were part of 566 commits (6% of
+the entire system) to MaxDB 7.500. These tokens were part
+of 87 out of 520 (26 months, 20 topics per month) of our
+locally generated topics.
+Even with our liberal topic similarity metrics that produced both long and short trends, we showed that there are
+only a few trends in a repository that recur. Since so few
+trends recur and so many trends appear only once this suggests that global topic analysis might be ignoring locally
+unique topics.
+The utility of global topic analysis is questionable if the
+value of information decreases as it becomes older. Perhaps
+older trends will dominate the topic analysis. Windowed
+localized topic analysis shows what are the unique topics,
+yet seems to give a more nuanced view of the timeliness of
+the important topics.
+
+Figure 8. MaxDB 7.500 topics analyzed with
+global topic analysis, 20 topics (each row)
+and their document counts plotted over the
+entire development history of MaxDB 7.500
+(26 months). The shade of the topic indicates the number of documents matching
+that topic in that month relative to the number
+of documents (white is most, black is least).
+
+6. Validity Threats
+In this study we are explicitly trusting that the programmers annotate their changes with relevant information. We
+rely on the descriptions they provide. If the language of
+check-in comments was automated we would be analyzing
+only that.
+We compared topics using the top 10 tokens, this approach could be throwing data away and might not be as
+useful as determining the actual distance between two word
+topic distributions.
+Adding and removing stop words produced different results. Our choice of stop words could be biased, and could
+affect the results.
+The number of commits per month is inconsistent as
+some months have many changes while other months have
+almost none.
+
+7. Conclusions
+We proposed and demonstrated the application of windowed topic analysis, that is, topic analysis applied to commit messages during periods of development. This ap-
+
+proach differs from previous work that applied topic analysis globally to the entire history of a project without regard
+to time. We showed that many topics that exist locally are
+relevant and interesting yet would often not be detected via
+global topic analysis. We identify recurring topics with a
+topic similarity measure that looks for topics which recur
+and mutate repeatedly throughout the development of the
+software project.
+Windowed topic analysis demonstrated its value to hilight local topics and indentify global trends. This was
+shown in our case study of MaxDB 7.500. Global topic
+analysis missed important topics such as ODBC while windowed topic analysis identified them.
+We presented several visualization techniques that focused on different aspects of the data: temporality of trends,
+trend size, and a compact-trend-view. The compact-trendview shows much more information than the views that
+global analysis could show, it indicates how focused a period is by the total number of topics, as well, it shows topics
+by similarity so one can track trends across time. Our trendhistogram immediately highlights and measures the size of
+trends while our trend-time-line view shows how a topic reoccurs over time. These visualizations help us get a general
+feeling about the common and unique topics that developers
+focus on during development. If implemented interactively
+an user could easily zoom in and query for a summary of a
+topic or trend.
+
+7.1. Future Work
+We want to explore parameters more across multiple
+projects, what motivates the need for more or less topics,
+can we find a good estimate of a good choice of number
+of topics to evaluate. We want to investigate the effects
+of overlapping windows on this analysis, do they make the
+trends too long? Do they highlight some trends unnecessarily or are they more because they are time agnostic.
+Another avenue of future work is automatic topic labelling. Given a word distribution we should be able to
+automatically select a word or term that describes that distribution. Potential external sources of topic names include:
+software engineering taxonomies, ontologies and standards.
+
+References
+[1] T. Akira. Cvssuck - inefficient CVS repository grabber.
+http://cvs.m17n.org/ akr/cvssuck/.
+[2] D. M. Blei, A. Y. Ng, and M. I. Jordan. Latent dirichlet
+allocation. J. Mach. Learn. Res., 3:993–1022, 2003.
+[3] K. Delac, M. Grgic, and S. Grgic. Independent comparative
+study of pca, ica, and lda on the feret data set. International
+Journal of Imaging Systems and Technology, 15(5):252–
+260, 2006.
+[4] D. M. German, A. Hindle, and N. Jordan. Visualizing the
+evolution of software using softchange. In Proceedings
+
+[5]
+
+[6]
+
+[7]
+
+[8]
+
+[9]
+
+[10]
+
+[11]
+
+[12]
+
+[13]
+
+[14]
+
+[15]
+
+SEKE 2004 The 16th Internation Conference on Software
+Engineering and Knowledge Engineering, pages 336–341,
+3420 Main St. Skokie IL 60076, USA, June 2004. Knowledge Systems Institute.
+S. Grant, J. R. Cordy, and D. Skillicorn. Automated concept location using independent component analysis. In 15th
+Working Conference on Reverse Engineering, 2008.
+A. Hindle, M. Godfrey, and R. Holt. Release Pattern Discovery via Partitioning: Methodology and Case Study. In Proceedings of the Mining Software Repositories 2007. IEEE
+Computer Society Press, May 2007.
+A. Ko, B. Myers, and D. H. Chau. A linguistic analysis of
+how people describe software problems. Visual Languages
+and Human-Centric Computing, 2006. VL/HCC 2006. IEEE
+Symposium on, pages 127–134, Sept. 2006.
+A. Kuhn, S. Ducasse, and T. Girba. Enriching reverse engineering with semantic clustering. Reverse Engineering, 12th
+Working Conference on, pages 10 pp.–, Nov. 2005.
+E. Linstead, P. Rigor, S. Bajracharya, C. Lopes, and P. Baldi.
+Mining concepts from code with probabilistic topic models.
+In ASE ’07: Proceedings of the twenty-second IEEE/ACM
+international conference on Automated software engineering, pages 461–464, New York, NY, USA, 2007. ACM.
+E. Linstead, P. Rigor, S. Bajracharya, C. Lopes, and P. Baldi.
+Mining eclipse developer contributions via author-topic
+models. Mining Software Repositories, International Workshop on, 0:30, 2007.
+A. Marcus, A. Sergeyev, V. Rajlich, and J. Maletic. An information retrieval approach to concept location in source
+code. Reverse Engineering, 2004. Proceedings. 11th Working Conference on, pages 214–223, Nov. 2004.
+D. Poshyvanyk and A. Marcus. Combining formal concept
+analysis with information retrieval for concept location in
+source code. International Conference on Program Comprehension, 0:37–48, 2007.
+M. Rosen-Zvi, T. Griffiths, M. Steyvers, and P. Smyth. The
+author-topic model for authors and documents. In AUAI
+’04: Proceedings of the 20th conference on Uncertainty in
+artificial intelligence, pages 487–494, Arlington, Virginia,
+United States, 2004. AUAI Press.
+L. H. E. Stacy K. Lukins, Nicholas A. Kraft. Source code
+retrieval for bug localization using latent dirichlet allocation.
+In 15th Working Conference on Reverse Engineering, 2008.
+A. Tridgell, P. Mackerras, and W. Davison.
+Rsync.
+http://www.samba.org/rsync/.
+
+
