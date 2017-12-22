@@ -1,21 +1,41 @@
-ID,title,authors,Limit,MaxLimit
-han2012WCRE-Android-Fragmentation,Android Fragmentation,Some Authors,8,8
-chowdhury2015IGSC-systemcall,Something about syscalls,Some Authors,8,8
-hindle2011MSR-topicnaming,Some LDA Topic Paper,Some Authors,8,8
-pang2016ICSMEERA,Continuous Processes ,Some Authors,8,8
-hindle2005MSR-SCQL,A Query Language No One uses,Some Authors,8,8
-hindle2015NIME-orchestrating,Computer Music Orchestration,Some Authors,8,8
-german2004SEKE-softChange,Visualization,Some Authors,8,8
-chowdhury2015MSR-IRC,chowdhury2015MSR-IRC,Some Authors,8,8
-chowdhury2016SANER-http2,chowdhury2016SANER-http2,Some Authors,8,8
-santos2016MSR-judging-a-commit-by-its-cover,santos2016MSR-judging-a-commit-by-its-cover,Some Authors,8,8
-hindle2014MSR-greenminer,hindle2014MSR-greenminer,Some Authors,8,8
-hindle2011ICSENIER-Multifractal,hindle2011ICSENIER-Multifractal,Some Authors,8,8
-bazelli2013ICSMERA-Personality,bazelli2013ICSMERA-Personality,Some Authors,8,8
-hindle2016CACM,hindle2016CACM,Some Authors,8,8
-hindle2014EMSE-topics,hindle2014EMSE-topics,Some Authors,8,8
-aggarwal2014MSR-documentation,aggarwal2014MSR-documentation,Some Authors,8,8
-hindle2016NIME-hacking-nimes,hindle2016NIME-hacking-nimes,Some Authors,8,8
-rasmussen2014GREENS-adblock,rasmussen2014GREENS-adblock,Some Authors,8,8
-guana2012MSR-Stars,guana2012MSR-Stars,Some Authors,8,8
-hindle2013EMSE-green-mining,hindle2013EMSE-green-mining,Some Authors,8,8
+ID,title,authors
+chowdhuryMSR2016-eProjects,eProjects,chowdhury
+pang2016ICSMEERA,pang2016ICSMEERA,pang
+hindleMSR2008-large-changes,large-changes,hindleMSR
+hindle2007ICSM-release-pattern,release-pattern,hindle
+hindle2016NIME-hacking-nimes,hacking-nimes,hindle
+hindle2008ICPC-reading-beside-the-lines,reading-beside-the-lines,hindle
+posnett2011WCRE-Got-Issues,Got-Issues,posnett
+hindle2012ICSENEIR-Green-Mining,Green-Mining,hindle
+hindle2010MSR-Challenge-Description,Challenge-Description,hindle
+hindle2011EMSE-automated-topic-naming,automated-topic-naming,hindle
+davies2012ESME-Bertillonage,Bertillonage,davies
+hindle2013NIME-SWARMED,SWARMED,hindle
+davies2011MSR-bertillonage,bertillonage,davies
+hindle2014NIME-cloudorch,cloudorch,hindle
+hindle2011ICSENIER-Multifractal,Multifractal,hindle
+burlet2015MSR-music-coders,music-coders,burlet
+hindle2016EMSE-bugdedup,bugdedup,hindle
+chowdhury2015IGSC-systemcall,systemcall,chowdhury
+romansky2014CASCON,romansky2014CASCON,romansky
+hindle2017NIME-Dijj,Dijj,hindle
+barr2012cid,barr2012cid,barr
+hindle2016CACM,hindle2016CACM,hindle
+hindle2012MSR-Green-Mining,Green-Mining,hindle
+hindleICPC2009-large-changes-classification,large-changes-classification,hindleICPC
+zhang2014IEEESoftware-user-choice,user-choice,zhang
+hindle2005MSR-SCQL,SCQL,hindle
+alipour2013MSR-bugdedup,bugdedup,alipour
+german2004SEKE-softChange,softChange,german
+hindle2008SCAM-indentation-shape,indentation-shape,hindle
+chowdhury2015MSR-IRC,IRC,chowdhury
+posnett2011MSR-readability,readability,posnett
+bazelli2013ICSMERA-Personality,Personality,bazelli
+rasmussen2014GREENS-adblock,adblock,rasmussen
+hindle2007MSR-Release-Pattern-Discovery,Release-Pattern-Discovery,hindle
+burlet2017PeerJ,burlet2017PeerJ,burlet
+aggarwal2015ICSME-greenadvisor,greenadvisor,aggarwal
+hu2012MSR-builddeps,builddeps,hu
+campbell2013MSR-Deficient,Deficient,campbell
+romansky2017ICSME-timeseries,timeseries,romansky
+hasan2016ICSE-Energy-Profiles-of-Java-Collections-Classes,Energy-Profiles-of-Java-Collections-Classes,hasan
