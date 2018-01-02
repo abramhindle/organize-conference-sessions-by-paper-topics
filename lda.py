@@ -328,7 +328,7 @@ class VowpalWabbit(object):
         with open(fname) as lines:
             position = 0
 
-            is_vowpal_metadata = lambda line: ':' in line or 'Version' in line
+            is_vowpal_metadata = lambda line: ':' in line or 'Version' in line or 'Id' in line
             lines = itertools.dropwhile(is_vowpal_metadata, iter(lines))
             lines = itertools.islice(lines, skip, None)
                 # skip the first skip non-metadata lines
