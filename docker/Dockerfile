@@ -40,7 +40,7 @@ ENV LC_ALL en_US.UTF-8
 # python deps
 RUN pip install nltk 
 
-RUN cd && mkdir logs
+RUN apt-get -y install zlib1g-dev
 
 # setup vowpal_wabbit - checkout version 8.5.0
 RUN cd && git clone https://github.com/JohnLangford/vowpal_wabbit.git && \
@@ -52,5 +52,7 @@ RUN cd && git clone https://github.com/JohnLangford/vowpal_wabbit.git && \
 
 RUN apt-get -y install apt-utils
 RUN apt-get -y install pkg-config
+RUN apt-get -y install python-dateutil python-sklearn
+ADD ./run.sh /
 
 ENV LOGNAME docker

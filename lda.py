@@ -203,7 +203,7 @@ class LDA(object):
         lda = LDA()
 
         token_counts = [lda.add_and_count_doc(doc) for doc in docs]
-        print 'filtering tokens'
+        #print('filtering tokens')
         lda.filter_tokens()
         for i in range(len(token_counts)):
             counts = token_counts[i]
@@ -288,7 +288,7 @@ class VowpalWabbit(object):
 
 
     def inform_loader(self, loader):
-        print 'find document topic associations'
+        #print 'find document topic associations'
         # each line is the associations of a document to the topics
         self.read_vowpal_output(self.run.LDA_PREDICTIONS_FNAME,
                     lambda d, a: loader.set_document_topic_associations(a),
@@ -305,7 +305,7 @@ class VowpalWabbit(object):
                 self.run.LDA_TOPICS_FNAME,
                 self.run.LDA_CACHE_FILE])
 
-        print 'find token topic associations'
+        #print 'find token topic associations'
         # each line is the associations of a token to the topics
         self.read_vowpal_output(self.run.LDA_TOPICS_FNAME,
                     summary.set_token_topic_associations)
@@ -356,7 +356,7 @@ class LDASummary(object):
             # round up to nearest power of 2 because VW will make up new
             # magical tokens for us that weren't in our docs
 
-        print 'token count at summary create', token_count
+        #print 'token count at summary create', token_count
         self.topic_token_matrix = [[0] * pow_2_token_count
                                     for i in range(topic_count)]
         self.topic_summaries = [None] * topic_count

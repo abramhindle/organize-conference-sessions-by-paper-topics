@@ -123,7 +123,7 @@ class LDARun(TopicsRun):
 
         config = Config.getInstance()
         workdir =  config.workdir_path('out')
-        print workdir
+        #print workdir
         os.system('mkdir -p {}'.format(workdir))
 
         def wd(path):

@@ -3,7 +3,7 @@ import os
 class LDARun():
     def __init__(self):
         workdir =  'out'
-        print workdir
+        #print workdir
         os.system('mkdir -p {}'.format(workdir))
 
         def wd(path):

@@ -8,7 +8,7 @@ This program uses LDA to characterize the topics of ALL SUBMITTED papers. Then a
 
 # Requirements
 
-* Vowpal Wabbit  http://hunch.net/~vw/ - apt-get install vw 
+* Vowpal Wabbit 8.1 or greater  http://hunch.net/~vw/ - apt-get install vw 
 * python2
 * numpy - pip install --user numpy
 * nltk - pip install --user nltk
@@ -146,4 +146,13 @@ Cluster 8:
 Cluster 9:
 9,rasmussen2014GREENS-adblock,adblock,rasmussen
 9,hindle2010MSR-Challenge-Description,Challenge-Description,hindle
+```
+
+# I want to use docker!
+
+Give this a shot!
+
+```
+bash run-msrcluster-in-docker.sh  
+cat msrcluster.output
 ```
